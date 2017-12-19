@@ -10,11 +10,13 @@ import { SearchService } from './search.service';
 export class AppComponent {
   public giphs:SearchResult[] = [];
   public loading = false;
+  public totalRecords = 0;
 
   constructor(private searchService:SearchService) { }
 
   updateSearchResults(data) {
     this.giphs = data;
+    this.updateLoadingStatus();
   }
 
   loadNext() {
@@ -22,7 +24,12 @@ export class AppComponent {
     this.searchService.loadNext()
       .subscribe((more:SearchResult[]) => {
         this.giphs = this.giphs.concat(more);
-        this.loading = false;
+        this.updateLoadingStatus();
       });
+  }
+
+  private updateLoadingStatus() {
+    this.loading = false;
+    this.totalRecords = this.searchService.getTotalAvailableRecords();
   }
 }

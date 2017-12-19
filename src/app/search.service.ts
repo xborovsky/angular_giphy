@@ -10,6 +10,7 @@ import { SearchResult } from './search-result';
 export class SearchService {
   private pageSize = 9;
   private loaded = 0;
+  private totalRecords = 0;
   private searchStr = '';
 
   constructor(private http:HttpClient) { }
@@ -19,6 +20,7 @@ export class SearchService {
     return this.http.get(this.getSearchUrl())
       .map((response:any) => { 
         this.loaded = response.data.length;
+        this.totalRecords = response.pagination.total_count;
         return this.filterResult(response); 
       });
   }
@@ -29,6 +31,10 @@ export class SearchService {
       this.loaded += response.data.length;
       return this.filterResult(response); 
     });
+  }
+
+  getTotalAvailableRecords() {
+    return this.totalRecords;
   }
 
   private filterResult(response:any):SearchResult[] {
