@@ -9,6 +9,7 @@ import { SearchService } from './search.service';
 })
 export class AppComponent {
   public giphs:SearchResult[] = [];
+  public loading = false;
 
   constructor(private searchService:SearchService) { }
 
@@ -17,9 +18,11 @@ export class AppComponent {
   }
 
   loadNext() {
+    this.loading = true;
     this.searchService.loadNext()
       .subscribe((more:SearchResult[]) => {
         this.giphs = this.giphs.concat(more);
+        this.loading = false;
       });
   }
 }
